@@ -81,6 +81,31 @@ export default function DashboardScreen({ navigation }) {
     // Start joining a call
     // const call = Daily.createCallObject();
     // call.join({ url: 'https://tribeexercise.daily.co/daily' });
+
+// - 'participant-joined' and 'participant-left' are for remote participants only
+// - 'participant-updated' is for the local participant as well as remote participants
+// const events: DailyEvent[] = [
+//   'participant-joined',
+//   'participant-updated',
+//   'participant-left',
+// ];
+// for (const event of events) {
+//   call.on(event, () => {
+//     for (const participant of Object.values(call.participants())) {
+//       console.log('---');
+//       console.log(`participant ${participant.user_id}:`);
+//       if (participant.local) {
+//         console.log('is local');
+//       }
+//       if (participant.audio) {
+//         console.log('audio enabled', participant.audioTrack);
+//       }
+//       if (participant.video) {
+//         console.log('video enabled', participant.videoTrack);
+//       }
+//     }
+//   });
+// }
   }
 
   return (
@@ -91,8 +116,8 @@ export default function DashboardScreen({ navigation }) {
       {loading && (
         <ActivityIndicator size="small" color="#323232" />
       )}
-      {users.map(user => (
-        <User>
+      {users.map((user, index) => (
+        <User key={`user-${index}`}>
           <TextBottom>{user.name.firstname} {user.name.lastname}</TextBottom>
           <Button onPress={handleCall}>
             <MaterialIcons name="video-call" size={24} color="#3C6973" />

@@ -26,13 +26,18 @@
           "fetch"
         ]
       },
+      "bundleIdentifier": "com.titoflorez.TribeTest"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions":["CAMERA"]
+      "permissions": [
+        "CAMERA",
+        "MICROPHONE"
+      ],
+      "package": "com.titoflorez.TribeTest"
     },
     "web": {
       "favicon": "./assets/favicon.png"
