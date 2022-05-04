@@ -134,7 +134,7 @@ export default function SignupScreen({ navigation }) {
     const user = {
       email: email,
       username: username,
-      password: password,
+      password: userPassword,
       name:{
           firstname: firstName,
           lastname: lastName
@@ -153,10 +153,9 @@ export default function SignupScreen({ navigation }) {
     }
 
     try {
-      debugger;
+      // many times the fake API is failling but fake API doens't create any new user so navigate any way to login
       const userResult = await signup(user);
-      debugger;
-
+      navigation.navigate('Login');
     } catch(error) {
       console.log(error);
     }
@@ -187,7 +186,7 @@ export default function SignupScreen({ navigation }) {
       <Subtitle>This test is using fake api to supply the register users</Subtitle>
       <Fields>
         <InputField
-          onChange={(email) => validate(email)}
+          onChangeText={(email) => validate(email)}
           placeholder="Enter email address"
           value={email}
           returnKeyType="next"
@@ -198,7 +197,7 @@ export default function SignupScreen({ navigation }) {
           autoCapitalize="none"
           keyboardType="email-address" />
         <InputField
-          onChange={(first) => setFirstName(first)}
+          onChangeText={(first) => setFirstName(first)}
           placeholder="Enter First Name"
           value={firstName}
           returnKeyType="next"
@@ -207,7 +206,7 @@ export default function SignupScreen({ navigation }) {
           }
           blurOnSubmit={false} />
         <InputField
-          onChange={(last) => setLastName(last)}
+          onChangeText={(last) => setLastName(last)}
           placeholder="Enter Last Name"
           value={lastName}
           returnKeyType="next"
@@ -216,7 +215,7 @@ export default function SignupScreen({ navigation }) {
           }
           blurOnSubmit={false} />
         <InputField
-          onChange={(username) => setUsername(username)}
+          onChangeText={(username) => setUsername(username)}
           placeholder="Enter username"
           value={username}
           returnKeyType="next"
@@ -225,7 +224,7 @@ export default function SignupScreen({ navigation }) {
           }
           blurOnSubmit={false} />
         <InputField
-          onChange={(password) => setUserPassword(password)}
+          onChangeText={(password) => setUserPassword(password)}
           placeholder="Enter password"
           value={userPassword}
           returnKeyType="next"
@@ -235,7 +234,7 @@ export default function SignupScreen({ navigation }) {
           blurOnSubmit={false}
           secureTextEntry={true} />
         {/* <InputField
-          onChange={(address) => setAddress(address)}
+          onChangeText={(address) => setAddress(address)}
           placeholder="Enter address"
           value={address}
           returnKeyType="next"
@@ -245,7 +244,7 @@ export default function SignupScreen({ navigation }) {
           blurOnSubmit={false}
           secureTextEntry={true} /> */}
         <InputField
-          onChange={(phone) => setPhone(phone)}
+          onChangeText={(phone) => setPhone(phone)}
           placeholder="Enter phone number"
           value={phone}
           returnKeyType="next"

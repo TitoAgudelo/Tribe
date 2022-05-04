@@ -1,64 +1,73 @@
+import axios from 'axios';
 const apiUrl = 'https://fakestoreapi.com';
 
-const login = async(username, password) => {
+export const login = async(username, password) => {
 
-  const loginUlr = apiUrl + '/auth/login';
-  const options = {
-    method: 'POST',
+  const configurationObject = {
+    method: 'post',
+    url: `${apiUrl}/auth/login`,
     body: JSON.stringify({
-        username: username,
-        password: password
+      username: username,
+      password: password
     })
+  };
+
+  try {
+    const response = await axios(configurationObject);
+    console.log(response.data);
+    return response.data;
+  } catch(error) {
+    console.log(error);
   }
 
-  const response = await fetch(loginUlr, options);
-  const token = await response.json();
+  // const loginUlr = apiUrl + '/auth/login';
+  // const options = {
+  //   method: 'POST',
+  //   body: JSON.stringify({
+  //       username: username,
+  //       password: password
+  //   })
+  // }
 
-  return token;
+  // try {
+  //   const response = await fetch(loginUlr, options);
+  
+  //   const token = await response.json();
+  
+  //   return token;
+  // } catch(error) {
+  //   return error;
+  // }  
 }
 
-const signup = async(user) => {
-
-  // email:'John@gmail.com',
-  // username:'johnd',
-  // password:'m38rmF$',
-  // name:{
-  //     firstname:'John',
-  //     lastname:'Doe'
-  // },
-  // address:{
-  //     city:'kilcoole',
-  //     street:'7835 new road',
-  //     number:3,
-  //     zipcode:'12926-3874',
-  //     geolocation:{
-  //         lat:'-37.3159',
-  //         long:'81.1496'
-  //     }
-  // },
-  // phone:'1-570-236-7033'
-
-
+export const signup = async(user) => {
   const signupUlr = apiUrl + '/users';
   const options = {
     method: 'POST',
     body: JSON.stringify(user)
   }
 
-  debugger;
-  const response = await fetch(signupUlr, options);
-  debugger;
-
-  const userResponse = await response.json();
-
-  return userResponse;
+  try {
+    const response = await fetch(signupUlr, options);
+    const userResponse = await response.json();
+    return userResponse;
+  } catch (error) {
+    return error;
+  }
 }
 
-const getUsers = async( ) => {
-  const userUrl = apiUrl + '/users?limit=10';
+export const getUsers = async( ) => {
+  
+  const configurationObject = {
+    method: 'get',
+    url: `${apiUrl}/users?limit=10`,
+  };
 
-  const response = await fetch(userUrl);
-  const users = await response.json();
-
-  return users;
+  try {
+    const response = await axios(configurationObject);
+    console.log(response.data);
+    return response.data;
+  } catch(error) {
+    console.log(error);
+  }
 }

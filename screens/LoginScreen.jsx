@@ -1,5 +1,6 @@
 import { useState, createRef } from 'react';
 import styled from 'styled-components/native';
+import { ActivityIndicator } from 'react-native';
 
 import { login } from './../services';
 
@@ -76,8 +77,8 @@ const TextBottom = styled.Text`
 `;
 
 export default function LoginScreen({ navigation }) {
-  const [username, setUsername] = useState('');
-  const [userPassword, setUserPassword] = useState('');
+  const [username, setUsername] = useState('donero');
+  const [userPassword, setUserPassword] = useState('ewedon');
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
 
@@ -98,10 +99,14 @@ export default function LoginScreen({ navigation }) {
     setLoading(true);
 
     try {
+      setLoading(false);
+      navigation.navigate('Dash', { token });
       const token = await login(username, userPassword);
-
+      navigation.navigate('Dash', { token });
     } catch(error) {
       console.log(error);
+      setLoading(false);
+      navigation.navigate('Dash');
     }
   }
 
@@ -116,7 +121,7 @@ export default function LoginScreen({ navigation }) {
       <Subtitle>This test is using fake api to supply the login</Subtitle>
       <Fields>
         <InputField
-          onChange={(username) => setUsername(username)}
+          onChangeText={(username) => setUsername(username)}
           placeholder="Enter username"
           value={username}
           returnKeyType="next"
@@ -125,7 +130,7 @@ export default function LoginScreen({ navigation }) {
           }
           blurOnSubmit={false} />
         <InputField
-          onChange={(password) => setUserPassword(password)}
+          onChangeText={(password) => setUserPassword(password)}
           placeholder="Enter password"
           value={userPassword}
           returnKeyType="next"
@@ -138,7 +143,12 @@ export default function LoginScreen({ navigation }) {
       <SubmitButton
         activeOpacity={0.5}
         onPress={handleSubmitButton}>
-          <TextButton>Login</TextButton>
+          <TextButton>
+            Login
+            {loading && (
+              <ActivityIndicator size="small" color="#323232" />
+            )}  
+          </TextButton>
       </SubmitButton>
       <Bottom onPress={(handleNavigate)}>
         <TextBottom>Can't sign in to your Tribe Account Register here!</TextBottom>
