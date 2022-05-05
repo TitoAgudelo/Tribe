@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components/native';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
-// import Daily from '@daily-co/react-native-daily-js';
-// import { DailyMediaView } from '@daily-co/react-native-daily-js';
+import Daily, { DailyEvent, DailyParticipant } from '@daily-co/react-native-daily-js';
+import { DailyMediaView } from '@daily-co/react-native-daily-js';
 
 import { getUsers } from './../services';
 
@@ -62,6 +62,33 @@ export default function DashboardScreen({ navigation }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
+  const call = Daily.createCallObject();
+  const [participants, setParticipants] = useState([]);
+
+  useEffect(() => {
+    call.join({ url: 'https://tribeexercise.daily.co/daily' });
+
+    const events = [
+      'participant-joined',
+      'participant-updated',
+      'participant-left',
+    ];
+
+    for (const event of events) {
+      call.on(event, setParticipantsFromCallObject);
+    }
+
+    return () => {
+      for (const event of events) {
+        call.off(event, setParticipantsFromCallObject);
+      }
+      call.leave();
+    };
+  }, []);
+
+  function setParticipantsFromCallObject() {
+    setParticipants(Object.values(call.participants()));
+  }
 
   useEffect(() => {
     async function fetchUsers() {
@@ -78,52 +105,35 @@ export default function DashboardScreen({ navigation }) {
   }, [users]);
 
   const handleCall = () => {
-    // Start joining a call
-    // const call = Daily.createCallObject();
-    // call.join({ url: 'https://tribeexercise.daily.co/daily' });
-
-// - 'participant-joined' and 'participant-left' are for remote participants only
-// - 'participant-updated' is for the local participant as well as remote participants
-// const events: DailyEvent[] = [
-//   'participant-joined',
-//   'participant-updated',
-//   'participant-left',
-// ];
-// for (const event of events) {
-//   call.on(event, () => {
-//     for (const participant of Object.values(call.participants())) {
-//       console.log('---');
-//       console.log(`participant ${participant.user_id}:`);
-//       if (participant.local) {
-//         console.log('is local');
-//       }
-//       if (participant.audio) {
-//         console.log('audio enabled', participant.audioTrack);
-//       }
-//       if (participant.video) {
-//         console.log('video enabled', participant.videoTrack);
-//       }
-//     }
-//   });
-// }
+    
   }
 
   return (
-    <LoginLayout>
-      <ImageLogo source={require('./../assets/Rocket.png')} />
-      <Title>All users</Title>
-      <Subtitle>This test is using fake api to supply the login</Subtitle>
-      {loading && (
-        <ActivityIndicator size="small" color="#323232" />
-      )}
-      {users.map((user, index) => (
-        <User key={`user-${index}`}>
-          <TextBottom>{user.name.firstname} {user.name.lastname}</TextBottom>
-          <Button onPress={handleCall}>
-            <MaterialIcons name="video-call" size={24} color="#3C6973" />
-          </Button>
-        </User>
-      ))}
-    </LoginLayout>
+    <ScrollView>
+      <LoginLayout>
+        <ImageLogo source={require('./../assets/Rocket.png')} />
+        <Title>All users</Title>
+        <Subtitle>This test is using fake api to supply the login</Subtitle>
+        {loading && (
+          <ActivityIndicator size="small" color="#323232" />
+        )}
+        {participants && participants.map(participant => (
+          <DailyMediaView
+            videoTrack={participant.videoTrack}
+            audioTrack={participant.audioTrack}
+            mirror={participant.local}
+            zOrder={participant.local ? 1 : 0}
+          />
+        ))}
+        {users.map((user, index) => (
+          <User key={`user-${index}`}>
+            <TextBottom>{user.name.firstname} {user.name.lastname}</TextBottom>
+            <Button onPress={handleCall}>
+              <MaterialIcons name="video-call" size={24} color="#3C6973" />
+            </Button>
+          </User>
+        ))}
+      </LoginLayout>
+    </ScrollView>
   );
 }

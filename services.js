@@ -18,26 +18,7 @@ export const login = async(username, password) => {
     return response.data;
   } catch(error) {
     console.log(error);
-  }
-
-  // const loginUlr = apiUrl + '/auth/login';
-  // const options = {
-  //   method: 'POST',
-  //   body: JSON.stringify({
-  //       username: username,
-  //       password: password
-  //   })
-  // }
-
-  // try {
-  //   const response = await fetch(loginUlr, options);
-  
-  //   const token = await response.json();
-  
-  //   return token;
-  // } catch(error) {
-  //   return error;
-  // }  
+  } 
 }
 
 export const signup = async(user) => {
@@ -57,7 +38,6 @@ export const signup = async(user) => {
 }
 
 export const getUsers = async( ) => {
-  
   const configurationObject = {
     method: 'get',
     url: `${apiUrl}/users?limit=10`,
