@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components/native';
 import { ActivityIndicator, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
-import Daily, { DailyEvent, DailyParticipant } from '@daily-co/react-native-daily-js';
-import { DailyMediaView } from '@daily-co/react-native-daily-js';
 
 import { getUsers } from './../services';
 
@@ -61,34 +59,6 @@ const Button = styled.TouchableHighlight`
 export default function DashboardScreen({ navigation }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState('');
-  const call = Daily.createCallObject();
-  const [participants, setParticipants] = useState([]);
-
-  useEffect(() => {
-    call.join({ url: 'https://tribeexercise.daily.co/daily' });
-
-    const events = [
-      'participant-joined',
-      'participant-updated',
-      'participant-left',
-    ];
-
-    for (const event of events) {
-      call.on(event, setParticipantsFromCallObject);
-    }
-
-    return () => {
-      for (const event of events) {
-        call.off(event, setParticipantsFromCallObject);
-      }
-      call.leave();
-    };
-  }, []);
-
-  function setParticipantsFromCallObject() {
-    setParticipants(Object.values(call.participants()));
-  }
 
   useEffect(() => {
     async function fetchUsers() {
@@ -105,7 +75,7 @@ export default function DashboardScreen({ navigation }) {
   }, [users]);
 
   const handleCall = () => {
-    
+    navigation.navigate('Room');
   }
 
   return (
@@ -117,14 +87,6 @@ export default function DashboardScreen({ navigation }) {
         {loading && (
           <ActivityIndicator size="small" color="#323232" />
         )}
-        {participants && participants.map(participant => (
-          <DailyMediaView
-            videoTrack={participant.videoTrack}
-            audioTrack={participant.audioTrack}
-            mirror={participant.local}
-            zOrder={participant.local ? 1 : 0}
-          />
-        ))}
         {users.map((user, index) => (
           <User key={`user-${index}`}>
             <TextBottom>{user.name.firstname} {user.name.lastname}</TextBottom>
